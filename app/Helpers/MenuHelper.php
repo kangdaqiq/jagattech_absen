@@ -38,15 +38,20 @@ class MenuHelper
 
         // 2. SUPER ADMIN MENU
         if ($role === 'super_admin') {
+            $superAdminItems = [
+                ['icon' => 'tables', 'name' => 'Data Sekolah', 'path' => route('super-admin.schools.index', [], false)],
+                ['icon' => 'chat', 'name' => 'Status WA Device', 'path' => route('super-admin.whatsapp-devices.index', [], false)],
+                ['icon' => 'forms', 'name' => 'Pengumuman', 'path' => route('super-admin.announcements.index', [], false)],
+                ['icon' => 'authentication', 'name' => 'Kelola Lisensi', 'path' => route('super-admin.licenses.index', [], false)],
+            ];
+
+            if (\Illuminate\Support\Facades\Route::has('super-admin.ota.index')) {
+                $superAdminItems[] = ['icon' => 'ui-elements', 'name' => 'OTA Firmware', 'path' => route('super-admin.ota.index', [], false)];
+            }
+
             $menu[] = [
                 'title' => 'Super Admin',
-                'items' => [
-                    ['icon' => 'tables', 'name' => 'Data Sekolah', 'path' => route('super-admin.schools.index', [], false)],
-                    ['icon' => 'chat', 'name' => 'Status WA Device', 'path' => route('super-admin.whatsapp-devices.index', [], false)],
-                    ['icon' => 'forms', 'name' => 'Pengumuman', 'path' => route('super-admin.announcements.index', [], false)],
-                    ['icon' => 'authentication', 'name' => 'Kelola Lisensi', 'path' => route('super-admin.licenses.index', [], false)],
-                    ['icon' => 'ui-elements', 'name' => 'OTA Firmware', 'path' => route('super-admin.ota.index', [], false)],
-                ]
+                'items' => $superAdminItems
             ];
         }
 
