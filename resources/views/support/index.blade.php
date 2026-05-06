@@ -37,6 +37,10 @@
                         <i class="fas fa-envelope text-gray-500"></i>
                         {{ $admin->email }}
                     </a>
+                    <a href="https://wa.me/6281327735093" target="_blank" class="flex w-full items-center justify-center gap-2 rounded-lg bg-success-50 text-success-600 px-4 py-3 text-sm font-medium hover:bg-success-100 dark:bg-success-500/15 dark:text-success-500 dark:hover:bg-success-500/25 transition">
+                        <i class="fab fa-whatsapp text-lg"></i>
+                        0813 2773 5093
+                    </a>
                 </div>
             </div>
         </div>
