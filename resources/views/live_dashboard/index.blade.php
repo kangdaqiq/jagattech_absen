@@ -19,8 +19,6 @@
                         <i class="fas fa-expand"></i> Fullscreen
                     </a>
                 </h2>
-                <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Data diperbarui secara real-time dari seluruh
-                    perangkat.</p>
             </div>
             <div
                 class="bg-white dark:bg-boxdark rounded-lg shadow-sm border border-stroke dark:border-strokedark px-6 py-3 flex items-center gap-4">
@@ -51,7 +49,7 @@
             <div
                 class="bg-white dark:bg-boxdark rounded-xl shadow-sm border-l-4 border-green-500 p-6 flex items-center justify-between transition-all hover:shadow-md">
                 <div>
-                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Sudah Tap</p>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Sudah Absen</p>
                     <h3 id="stat-absen" class="text-3xl font-bold text-green-600 dark:text-green-400 mt-1">--</h3>
                 </div>
                 <div class="h-12 w-12 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
@@ -63,7 +61,7 @@
             <div
                 class="bg-white dark:bg-boxdark rounded-xl shadow-sm border-l-4 border-orange-500 p-6 flex items-center justify-between transition-all hover:shadow-md">
                 <div>
-                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Belum Tap</p>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Belum Absen</p>
                     <h3 id="stat-belum" class="text-3xl font-bold text-orange-600 dark:text-orange-400 mt-1">--</h3>
                 </div>
                 <div class="h-12 w-12 rounded-full bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center">
@@ -207,16 +205,16 @@
                             : '<i class="fas fa-exclamation-circle text-red-500"></i>';
 
                         const row = `
-                            <tr class="border-t border-stroke dark:border-strokedark hover:bg-gray-50 dark:hover:bg-meta-4/20 transition-colors animate-fade-in">
-                                <td class="px-6 py-4 text-sm font-mono text-gray-600 dark:text-gray-400">${log.time}</td>
-                                <td class="px-6 py-4">${actionBadge}</td>
-                                <td class="px-6 py-4">
-                                    <p class="text-sm font-medium text-gray-800 dark:text-white">${log.message}</p>
-                                    <p class="text-[10px] text-gray-400 font-mono">${log.uid || '-'}</p>
-                                </td>
-                                <td class="px-6 py-4 text-center text-xl">${statusIcon}</td>
-                            </tr>
-                        `;
+                                <tr class="border-t border-stroke dark:border-strokedark hover:bg-gray-50 dark:hover:bg-meta-4/20 transition-colors animate-fade-in">
+                                    <td class="px-6 py-4 text-sm font-mono text-gray-600 dark:text-gray-400">${log.time}</td>
+                                    <td class="px-6 py-4">${actionBadge}</td>
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm font-medium text-gray-800 dark:text-white">${log.message}</p>
+                                        <p class="text-[10px] text-gray-400 font-mono">${log.uid || '-'}</p>
+                                    </td>
+                                    <td class="px-6 py-4 text-center text-xl">${statusIcon}</td>
+                                </tr>
+                            `;
                         logBody.insertAdjacentHTML('beforeend', row);
                     });
                 }

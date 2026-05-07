@@ -553,8 +553,7 @@
         <div class="right-panel">
             <div class="log-header">
                 <div>
-                    <div class="log-title">Aktivitas Real-time</div>
-                    <div class="log-sub">Memantau tap masuk & pulang secara langsung</div>
+                    <div class="log-title">Aktivitas Absensi</div>
                 </div>
                 <div class="sync-badge">
                     <div class="sync-dot"></div>
@@ -572,7 +571,7 @@
 
     {{-- ── FOOTER ──────────────────────────────── --}}
     <div class="footer">
-        <div class="footer-left">&copy; {{ date('Y') }} Jagat Tech Solutions</div>
+        <div class="footer-left">&copy; {{ date('Y') }} Jagat Tech</div>
         <div class="footer-right">
             <span></span>
             <p id="last-sync">CONNECTED</p>
@@ -623,7 +622,7 @@
             if (!logs || logs.length === 0) {
                 body.innerHTML = `<div class="log-empty">
                     <i class="fas fa-clock"></i>
-                    <p>Belum ada aktivitas hari ini</p>
+                    <p>Belum ada aktivitas absensi hari ini</p>
                 </div>`;
                 return;
             }
@@ -631,8 +630,6 @@
             const badgeMap = {
                 checkin_success: { cls: 'badge-masuk', label: 'MASUK' },
                 checkout_success: { cls: 'badge-pulang', label: 'PULANG' },
-                gate_access: { cls: 'badge-gerbang', label: 'GERBANG' },
-                unknown_card: { cls: 'badge-unknown', label: 'UNKNOWN' },
             };
 
             body.innerHTML = logs.map(log => {
