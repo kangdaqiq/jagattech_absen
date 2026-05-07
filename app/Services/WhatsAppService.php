@@ -44,6 +44,17 @@ class WhatsAppService
         if (!$phone && !$phoneOrtu)
             return;
 
+        // Map short status to readable status
+        $statusMap = [
+            'H' => 'Hadir',
+            'A' => 'Alpha',
+            'I' => 'Izin',
+            'S' => 'Sakit',
+            'B' => 'Bolos',
+            'T' => 'Terlambat'
+        ];
+        $readableStatus = $statusMap[strtoupper($status)] ?? $status;
+
         // Determine if late based on keterangan
         $isLate = !empty($keterangan);
 
@@ -65,7 +76,7 @@ class WhatsAppService
                     nama: $name,
                     jamMasuk: $time,
                     kelas: $kelas,
-                    status: $status
+                    status: $readableStatus
                 );
             }
             $this->queueMessage($phone, $msg, $schoolId);
@@ -88,7 +99,7 @@ class WhatsAppService
                     nama: $name,
                     jamMasuk: $time,
                     kelas: $kelas,
-                    status: $status
+                    status: $readableStatus
                 );
             }
             $this->queueMessage($phoneOrtu, $msgOrtu, $schoolId);
