@@ -95,9 +95,9 @@
                     </td>
                     @if($isSuperAdmin)
                     <td class="border-b border-[#eee] py-4 px-4 dark:border-strokedark align-top">
-                        @if($log->school_id)
+                        @if($log->school)
                             <span class="text-sm text-gray-700 dark:text-gray-300">
-                                {{ optional(\App\Models\School::find($log->school_id))->name ?? 'ID: '.$log->school_id }}
+                                {{ $log->school->name }}
                             </span>
                         @else
                             <span class="inline-flex items-center gap-1 text-xs text-red-500 font-semibold">

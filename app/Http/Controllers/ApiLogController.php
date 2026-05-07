@@ -9,7 +9,7 @@ class ApiLogController extends Controller
 {
     public function index(Request $request)
     {
-        $query = ApiLog::orderBy('created_at', 'desc');
+        $query = ApiLog::with('school')->orderBy('created_at', 'desc');
 
         $isSuperAdmin = auth()->user()->isSuperAdmin();
 
