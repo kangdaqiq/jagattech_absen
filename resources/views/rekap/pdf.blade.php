@@ -16,9 +16,28 @@
 </head>
 <body>
     <div class="header">
-        <h2>{{ $schoolName }}</h2>
-        <p style="margin: 0; font-size: 10px;">{{ $schoolAddress }}</p>
-        <hr style="border: 1px double #000; margin-top: 10px;">
+        @php
+            $hasKop = !empty($kopSurat);
+            $kopPath = null;
+            if ($hasKop) {
+                if (\Illuminate\Support\Str::startsWith($kopSurat, 'schools/')) {
+                    $kopPath = storage_path('app/public/' . $kopSurat);
+                } else {
+                    $kopPath = public_path('img/' . $kopSurat);
+                }
+            } else {
+                $kopPath = public_path('img/default_kop.png');
+            }
+        @endphp
+
+        @if($kopPath && file_exists($kopPath))
+            <img src="{{ $kopPath }}" style="width: 100%; max-height: 120px; object-fit: contain; margin-bottom: 10px;">
+        @else
+            <h2>{{ $schoolName }}</h2>
+            <p style="margin: 0; font-size: 10px;">{{ $schoolAddress }}</p>
+            <hr style="border: 1px double #000; margin-top: 10px;">
+        @endif
+        
         <h3 style="margin-top: 15px;">Laporan Rekapitulasi Absensi Siswa</h3>
     </div>
 

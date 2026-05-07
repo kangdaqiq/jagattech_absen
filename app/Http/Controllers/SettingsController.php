@@ -82,7 +82,25 @@ class SettingsController extends Controller
             app(\App\Services\LicenseService::class)->clearCache();
         }
 
-        $data = $request->except('_token', '_method', 'logo', 'license_key');
+        // Handle kop surat upload
+        if ($request->hasFile('kop_surat')) {
+            $request->validate([
+                'kop_surat' => 'required|image|mimes:jpeg,png,jpg|max:5120', // 5MB
+            ]);
+
+            $schoolId = auth()->user()->school_id ?? 0;
+            $path = $request->file('kop_surat')->store('schools/kop_surat', 'public');
+
+            \Illuminate\Support\Facades\DB::table('settings')->updateOrInsert(
+                [
+                    'setting_key' => 'kop_surat',
+                    'school_id' => $schoolId
+                ],
+                ['setting_value' => $path]
+            );
+        }
+
+        $data = $request->except('_token', '_method', 'logo', 'license_key', 'kop_surat');
 
         // Handle checkboxes (they don't send data when unchecked)
         $checkboxSettings = [

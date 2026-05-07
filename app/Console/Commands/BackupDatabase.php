@@ -46,7 +46,13 @@ class BackupDatabase extends Command
 
         // Path to mysqldump
         if (PHP_OS_FAMILY === 'Windows') {
-             $mysqldumpPath = 'c:\xampp\mysql\bin\mysqldump.exe'; // Default XAMPP
+             $mysqldumpPath = 'c:\xampp\mysql\bin\mysqldump.exe';
+             if (!file_exists($mysqldumpPath)) {
+                 $mysqldumpPath = 'd:\xampp\mysql\bin\mysqldump.exe'; // Check D: drive XAMPP
+                 if (!file_exists($mysqldumpPath)) {
+                     $mysqldumpPath = 'mysqldump'; // Try global if not found
+                 }
+             }
         } else {
              $mysqldumpPath = '/usr/bin/mysqldump'; // Typical Linux path
              if (!file_exists($mysqldumpPath)) {

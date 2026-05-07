@@ -58,9 +58,27 @@
 
 <body>
     <div class="header">
-        <h2>{{ $schoolName ?? 'SMK Negeri Contoh' }}</h2>
-        <p>{{ $schoolAddress ?? 'Alamat Sekolah Belum Diatur' }}</p>
-        <hr>
+        @php
+            $hasKop = !empty($kopSurat);
+            $kopPath = null;
+            if ($hasKop) {
+                if (\Illuminate\Support\Str::startsWith($kopSurat, 'schools/')) {
+                    $kopPath = storage_path('app/public/' . $kopSurat);
+                } else {
+                    $kopPath = public_path('img/' . $kopSurat);
+                }
+            } else {
+                $kopPath = public_path('img/default_kop.png');
+            }
+        @endphp
+
+        @if($kopPath && file_exists($kopPath))
+            <img src="{{ $kopPath }}" style="width: 100%; max-height: 120px; object-fit: contain; margin-bottom: 10px;">
+        @else
+            <h2>{{ $schoolName ?? 'SMK Negeri Contoh' }}</h2>
+            <p>{{ $schoolAddress ?? 'Alamat Sekolah Belum Diatur' }}</p>
+            <hr>
+        @endif
         <h3>REKAP ABSENSI GURU</h3>
         <p>Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} -
             {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</p>

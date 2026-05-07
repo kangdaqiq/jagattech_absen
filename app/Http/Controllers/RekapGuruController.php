@@ -109,8 +109,9 @@ class RekapGuruController extends Controller
 
         $schoolName = \App\Models\Setting::where('school_id', $schoolId)->where('setting_key', 'nama_sekolah')->value('setting_value');
         $schoolAddress = \App\Models\Setting::where('school_id', $schoolId)->where('setting_key', 'alamat_sekolah')->value('setting_value');
+        $kopSurat = \App\Models\Setting::where('school_id', $schoolId)->where('setting_key', 'kop_surat')->value('setting_value');
 
-        $pdf = Pdf::loadView('rekap-guru.pdf', compact('absensi', 'startDate', 'endDate', 'stats', 'schoolName', 'schoolAddress'));
+        $pdf = Pdf::loadView('rekap-guru.pdf', compact('absensi', 'startDate', 'endDate', 'stats', 'schoolName', 'schoolAddress', 'kopSurat'));
         $pdf->setPaper('a4', 'landscape');
 
         return $pdf->download('rekap-absensi-guru-' . $startDate . '-to-' . $endDate . '.pdf');

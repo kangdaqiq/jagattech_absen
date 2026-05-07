@@ -324,6 +324,7 @@ class RekapController extends Controller
 
         $namaKepsek = \App\Models\Setting::where('school_id', $schoolId)->where('setting_key', 'nama_kepala_sekolah')->value('setting_value');
         $namaWaka = \App\Models\Setting::where('school_id', $schoolId)->where('setting_key', 'nama_waka_kesiswaan')->value('setting_value');
+        $kopSurat = \App\Models\Setting::where('school_id', $schoolId)->where('setting_key', 'kop_surat')->value('setting_value');
 
         // Defaults
         $schoolName = $schoolName ?? 'SMK Negeri Contoh';
@@ -335,7 +336,7 @@ class RekapController extends Controller
         $kelas = Kelas::find($kelasId);
         $rekap = $summary; // Pass array to view
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('rekap.pdf', compact('rekap', 'startDate', 'endDate', 'kelas', 'schoolName', 'schoolAddress', 'signatureLocation', 'namaKepsek', 'namaWaka'));
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('rekap.pdf', compact('rekap', 'startDate', 'endDate', 'kelas', 'schoolName', 'schoolAddress', 'signatureLocation', 'namaKepsek', 'namaWaka', 'kopSurat'));
         $pdf->setPaper('a4', 'portrait');
 
         return $pdf->stream('rekap_absensi.pdf');

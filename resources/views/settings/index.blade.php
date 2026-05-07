@@ -111,7 +111,32 @@
                                 </div>
                                 <input type="file" name="logo" id="logo-input" accept="image/*"
                                     class="w-full cursor-pointer rounded-lg border border-gray-200 bg-transparent text-sm outline-none dark:border-gray-800 dark:bg-gray-900 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 dark:file:bg-gray-800 dark:file:text-white dark:hover:file:bg-gray-700">
-                                <p class="mt-1 text-xs text-gray-500">Format: JPG, PNG, GIF, SVG. Maksimal 2MB</p>
+                                <p class="mt-1 text-xs text-gray-500">Format: JPG, PNG, GIF, SVG. Maksimal 10MB</p>
+                            </div>
+
+                            <div>
+                                <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Kop Surat
+                                    Sekolah (Header Laporan)</label>
+                                <div class="mb-3">
+                                    @php
+                                        $kopSurat = !empty($settings['kop_surat']) ? $settings['kop_surat'] : 'default_kop.png';
+                                        $isStorageKop = \Illuminate\Support\Str::startsWith($kopSurat, 'schools/');
+                                        $kopUrl = asset('img/default_kop.png'); // Default
+
+                                        if ($isStorageKop && file_exists(storage_path('app/public/' . $kopSurat))) {
+                                            $kopUrl = asset('storage/' . $kopSurat);
+                                        } elseif (!$isStorageKop && file_exists(public_path('img/' . $kopSurat))) {
+                                            $kopUrl = asset('img/' . $kopSurat);
+                                        }
+                                    @endphp
+                                    <div
+                                        class="rounded-lg border border-gray-200 p-2 dark:border-gray-800 bg-white dark:bg-gray-800 w-full overflow-hidden flex justify-center">
+                                        <img src="{{ $kopUrl }}" alt="Kop Surat" id="kop-preview" class="h-24 object-contain max-w-full">
+                                    </div>
+                                </div>
+                                <input type="file" name="kop_surat" id="kop-input" accept="image/jpeg,image/png,image/jpg"
+                                    class="w-full cursor-pointer rounded-lg border border-gray-200 bg-transparent text-sm outline-none dark:border-gray-800 dark:bg-gray-900 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 dark:file:bg-gray-800 dark:file:text-white dark:hover:file:bg-gray-700">
+                                <p class="mt-1 text-xs text-gray-500">Format: JPG, PNG. Rekomendasi resolusi lebar (contoh: 1200x200px). Maksimal 5MB.</p>
                             </div>
 
                             <div
@@ -298,6 +323,18 @@
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     document.getElementById('logo-preview').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Kop Surat preview
+        document.getElementById('kop-input').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('kop-preview').src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
