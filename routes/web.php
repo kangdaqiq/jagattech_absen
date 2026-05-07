@@ -89,6 +89,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
     Route::get('/support', [App\Http\Controllers\SupportController::class, 'index'])->name('support.index');
+    Route::get('/live', [App\Http\Controllers\LiveDashboardController::class, 'index'])->name('live.index');
+    Route::get('/live/data', [App\Http\Controllers\LiveDashboardController::class, 'data'])->name('live.data');
 
     // Admin & Teacher Routes
     Route::middleware('role:admin,teacher')->group(function () {

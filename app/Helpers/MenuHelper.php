@@ -92,6 +92,11 @@ class MenuHelper
                 'title' => 'Kehadiran',
                 'items' => [
                     [
+                        'name' => 'Monitoring Real-time',
+                        'icon' => 'charts',
+                        'path' => route('live.index', [], false),
+                    ],
+                    [
                         'name' => 'Absensi',
                         'icon' => 'calendar',
                         'subItems' => $absensiSubItems
