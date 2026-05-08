@@ -548,6 +548,13 @@ class RfidController extends Controller
                 ->lockForUpdate()
                 ->first();
 
+            // If record exists but jam_masuk is NULL (Sakit, Izin, or Alpha from system)
+            // allow a fresh check-in to override the system record
+            if ($att && $att->jam_masuk === null && in_array($att->status, ['S', 'I', 'A', 'B'])) {
+                $att->delete();
+                $att = null;
+            }
+
             // Case 1: Lengkap
             if ($att && $att->jam_pulang) {
                 DB::rollBack();

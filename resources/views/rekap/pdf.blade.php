@@ -71,10 +71,20 @@
             </tr>
             @endforeach
         </tbody>
+        <tfoot>
+            <tr style="font-weight: bold; background-color: #f2f2f2;">
+                <td colspan="2">TOTAL</td>
+                <td>{{ collect($rekap)->sum('hadir') }}</td>
+                <td>{{ collect($rekap)->sum('izin') }}</td>
+                <td>{{ collect($rekap)->sum('sakit') }}</td>
+                <td>{{ collect($rekap)->sum('alpha') }}</td>
+                <td>{{ collect($rekap)->sum('bolos') }}</td>
+            </tr>
+        </tfoot>
     </table>
 
-    <div style="margin-top: 30px; text-align: center; font-size: 12px;">
-        <div>{{ $signatureLocation }}, {{ now()->isoFormat('D MMMM Y') }}</div>
+    <div style="margin-top: 30px; text-align: right; font-size: 12px; padding-right: 40px;">
+        {{ $signatureLocation }}, {{ now()->isoFormat('DD MMMM Y') }}
     </div>
 
     <div style="margin-top: 10px; text-align: center; font-size: 12px; font-weight: bold;">
@@ -89,6 +99,9 @@
                 <div style="font-size: 12px; border-top: 1px solid #000; display: inline-block; padding-top: 4px; min-width: 180px;">
                     {{ $namaWaka ?: '.............................' }}
                 </div>
+                @if($nipWaka)
+                    <div style="font-size: 11px;">NIP. {{ $nipWaka }}</div>
+                @endif
             </td>
             <td style="width: 50%; text-align: center; border: none; vertical-align: top; padding: 0 20px;">
                 <div style="font-size: 12px; font-weight: bold;">Kepala {{ $schoolName }}</div>
@@ -96,6 +109,9 @@
                 <div style="font-size: 12px; border-top: 1px solid #000; display: inline-block; padding-top: 4px; min-width: 180px;">
                     {{ $namaKepsek ?: '.............................' }}
                 </div>
+                @if($nipKepsek)
+                    <div style="font-size: 11px;">NIP. {{ $nipKepsek }}</div>
+                @endif
             </td>
         </tr>
     </table>

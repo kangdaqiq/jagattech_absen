@@ -101,41 +101,67 @@ class DailyReportCommand extends Command
 
         $this->info("Generating report...");
 
-        // --- AUTO-EXTEND SAKIT FROM YESTERDAY (2 DAYS) ---
-        $yesterday = now()->subDay()->format('Y-m-d');
-
-        // Find students who were SAKIT yesterday SCOPED
-        $yesterdaySakit = Attendance::where('tanggal', $yesterday)
-            ->whereHas('student', function ($q) use ($schoolId) {
-                $q->where('school_id', $schoolId);
-            })
-            ->where('status', 'S')
-            ->where('is_auto_extended', false)
-            ->get();
-
+        // --- AUTO-EXTEND SAKIT ---
+        $maxSakitDays = (int) (Setting::where('school_id', $schoolId)->where('setting_key', 'sakit_max_days')->value('setting_value') ?? 2);
         $autoExtendCount = 0;
-        foreach ($yesterdaySakit as $att) {
-            // Check if student already has attendance record for today
-            $existsToday = Attendance::where('student_id', $att->student_id)
-                ->where('tanggal', $today)
-                ->exists();
 
-            // Only create if no record exists
-            if (!$existsToday) {
-                Attendance::create([
-                    'student_id' => $att->student_id,
-                    'tanggal' => $today,
-                    'jam_masuk' => null,
-                    'jam_pulang' => null,
-                    'jam_kerja' => null,
-                    'status' => 'S',
-                    'keterangan' => '[Auto-Lanjut] Sakit (Hari ke-2)',
-                    'is_auto_extended' => true,
-                    'lokasi_masuk' => 'System',
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
-                $autoExtendCount++;
+        if ($maxSakitDays > 1) {
+            $yesterday = now()->subDay()->format('Y-m-d');
+
+            // Find students who were SAKIT yesterday SCOPED
+            $yesterdaySakit = Attendance::where('tanggal', $yesterday)
+                ->whereHas('student', function ($q) use ($schoolId) {
+                    $q->where('school_id', $schoolId);
+                })
+                ->where('status', 'S')
+                ->get();
+
+            foreach ($yesterdaySakit as $att) {
+                // Count consecutive "Sakit" days backwards starting from yesterday
+                $consecutiveDays = 1;
+                $checkDate = \Carbon\Carbon::parse($yesterday)->subDay();
+                
+                // Maximum safety loop
+                for ($i = 0; $i < 30; $i++) {
+                    $prevRecord = Attendance::where('student_id', $att->student_id)
+                        ->where('tanggal', $checkDate->format('Y-m-d'))
+                        ->where('status', 'S')
+                        ->exists();
+                    
+                    if ($prevRecord) {
+                        $consecutiveDays++;
+                        $checkDate->subDay();
+                        if ($consecutiveDays >= $maxSakitDays) break;
+                    } else {
+                        break;
+                    }
+                }
+
+                // If consecutive days (up to yesterday) is less than max allowed, extend to today
+                if ($consecutiveDays < $maxSakitDays) {
+                    // Check if student already has attendance record for today
+                    $existsToday = Attendance::where('student_id', $att->student_id)
+                        ->where('tanggal', $today)
+                        ->exists();
+
+                    // Only create if no record exists
+                    if (!$existsToday) {
+                        Attendance::create([
+                            'student_id' => $att->student_id,
+                            'tanggal' => $today,
+                            'jam_masuk' => null,
+                            'jam_pulang' => null,
+                            'jam_kerja' => null,
+                            'status' => 'S',
+                            'keterangan' => '[Auto-Lanjut] Sakit (Hari ke-' . ($consecutiveDays + 1) . ')',
+                            'is_auto_extended' => true,
+                            'lokasi_masuk' => 'System',
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ]);
+                        $autoExtendCount++;
+                    }
+                }
             }
         }
         $this->info("Auto-extended $autoExtendCount Sakit records.");

@@ -49,12 +49,32 @@
             </div>
         </div>
         
-        <div class="relative w-full sm:w-64">
-            <input type="text" id="clientSearch" placeholder="Cari di halaman ini..." 
-                class="client-search w-full rounded-lg border border-gray-200 bg-transparent py-2 pl-4 pr-10 text-sm outline-none focus:border-brand-500 dark:border-gray-800 dark:bg-gray-900 dark:focus:border-brand-500 text-gray-800 dark:text-white/90">
-            <button type="button" class="absolute right-0 top-0 h-full px-3 text-gray-500 hover:text-brand-500 dark:text-gray-400">
-                <i class="fas fa-search"></i>
-            </button>
+        <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+            {{-- Form Filter & Search --}}
+            <form action="{{ route('siswa.index') }}" method="GET" class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                {{-- Filter Kelas --}}
+                <div class="relative">
+                    <select name="kelas_id" onchange="this.form.submit()" 
+                        class="appearance-none w-full sm:w-48 rounded-lg border border-gray-200 bg-transparent py-2 pl-4 pr-10 text-sm outline-none focus:border-brand-500 dark:border-gray-800 dark:bg-gray-900 dark:focus:border-brand-500 text-gray-800 dark:text-white/90 cursor-pointer">
+                        <option value="">Semua Kelas</option>
+                        @foreach ($kelas as $k)
+                            <option value="{{ $k->id }}" {{ request('kelas_id') == $k->id ? 'selected' : '' }}>{{ $k->nama_kelas }}</option>
+                        @endforeach
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </div>
+                </div>
+
+                {{-- Server-side Search --}}
+                <div class="relative w-full sm:w-64">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Siswa..." 
+                        class="w-full rounded-lg border border-gray-200 bg-transparent py-2 pl-4 pr-10 text-sm outline-none focus:border-brand-500 dark:border-gray-800 dark:bg-gray-900 dark:focus:border-brand-500 text-gray-800 dark:text-white/90">
+                    <button type="submit" class="absolute right-0 top-0 h-full px-3 text-gray-500 hover:text-brand-500 dark:text-gray-400">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 

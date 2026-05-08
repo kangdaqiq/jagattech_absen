@@ -73,18 +73,34 @@
                                     class="w-full rounded-lg border border-gray-200 bg-transparent px-4 py-2 outline-none focus:border-brand-500 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
                             </div>
 
-                            <div>
-                                <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Kepala Sekolah</label>
-                                <input type="text" name="nama_kepala_sekolah" value="{{ $settings['nama_kepala_sekolah'] ?? '' }}"
-                                    placeholder="Contoh: Drs. Ahmad Fauzi, M.Pd"
-                                    class="w-full rounded-lg border border-gray-200 bg-transparent px-4 py-2 outline-none focus:border-brand-500 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Kepala Sekolah</label>
+                                    <input type="text" name="nama_kepala_sekolah" value="{{ $settings['nama_kepala_sekolah'] ?? '' }}"
+                                        placeholder="Contoh: Drs. Ahmad Fauzi, M.Pd"
+                                        class="w-full rounded-lg border border-gray-200 bg-transparent px-4 py-2 outline-none focus:border-brand-500 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                                </div>
+                                <div>
+                                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">NIP Kepala Sekolah</label>
+                                    <input type="text" name="nip_kepala_sekolah" value="{{ $settings['nip_kepala_sekolah'] ?? '' }}"
+                                        placeholder="Masukkan NIP"
+                                        class="w-full rounded-lg border border-gray-200 bg-transparent px-4 py-2 outline-none focus:border-brand-500 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                                </div>
                             </div>
 
-                            <div>
-                                <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Waka Kesiswaan</label>
-                                <input type="text" name="nama_waka_kesiswaan" value="{{ $settings['nama_waka_kesiswaan'] ?? '' }}"
-                                    placeholder="Contoh: Siti Nurhaliza, S.Pd"
-                                    class="w-full rounded-lg border border-gray-200 bg-transparent px-4 py-2 outline-none focus:border-brand-500 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Waka Kesiswaan</label>
+                                    <input type="text" name="nama_waka_kesiswaan" value="{{ $settings['nama_waka_kesiswaan'] ?? '' }}"
+                                        placeholder="Contoh: Siti Nurhaliza, S.Pd"
+                                        class="w-full rounded-lg border border-gray-200 bg-transparent px-4 py-2 outline-none focus:border-brand-500 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                                </div>
+                                <div>
+                                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">NIP Waka Kesiswaan</label>
+                                    <input type="text" name="nip_waka_kesiswaan" value="{{ $settings['nip_waka_kesiswaan'] ?? '' }}"
+                                        placeholder="Masukkan NIP"
+                                        class="w-full rounded-lg border border-gray-200 bg-transparent px-4 py-2 outline-none focus:border-brand-500 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                                </div>
                             </div>
                         </div>{{-- end kolom kiri --}}
 
@@ -207,13 +223,20 @@
                         </div>
 
                         <div>
-                            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Laporan Harian
-                                (Pagi)</label>
+                            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Laporan Harian</label>
                             <input type="time" name="schedule_daily_report"
                                 value="{{ $settings['schedule_daily_report'] ?? '08:15' }}"
                                 class="w-full rounded-lg border border-gray-200 bg-transparent px-4 py-2 outline-none focus:border-brand-500 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
                             <p class="mt-1 text-xs text-gray-500">Waktu pengiriman rekap kehadiran ke grup kelas & wali
                                 kelas</p>
+                        </div>
+
+                        <div>
+                            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Masa Berlaku Izin Sakit (Hari)</label>
+                            <input type="number" name="sakit_max_days" min="1" max="30"
+                                value="{{ $settings['sakit_max_days'] ?? '2' }}"
+                                class="w-full rounded-lg border border-gray-200 bg-transparent px-4 py-2 outline-none focus:border-brand-500 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                            <p class="mt-1 text-xs text-gray-500">Jumlah hari izin "Sakit" berlaku (Contoh: 2 hari berarti jika hari ini izin sakit, besok otomatis masih izin sakit bila tidak absen masuk).</p>
                         </div>
                     </div>
 

@@ -316,14 +316,12 @@ class RekapController extends Controller
 
         $schoolName = \App\Models\Setting::where('school_id', $schoolId)->where('setting_key', 'nama_sekolah')->value('setting_value');
         $schoolAddress = \App\Models\Setting::where('school_id', $schoolId)->where('setting_key', 'alamat_sekolah')->value('setting_value');
-        $signatureLocation = \App\Models\Setting::where('school_id', $schoolId)->where('setting_key', 'kota_lokasi_ttd')->value('setting_value'); // key is 'kota_lokasi_ttd' based on default settings created
-        // Backup check just in case key name differs or was 'alamat_ttd' in old code
-        if (!$signatureLocation) {
-            $signatureLocation = \App\Models\Setting::where('school_id', $schoolId)->where('setting_key', 'alamat_ttd')->value('setting_value');
-        }
+        $signatureLocation = \App\Models\Setting::where('school_id', $schoolId)->where('setting_key', 'alamat_ttd')->value('setting_value');
 
         $namaKepsek = \App\Models\Setting::where('school_id', $schoolId)->where('setting_key', 'nama_kepala_sekolah')->value('setting_value');
         $namaWaka = \App\Models\Setting::where('school_id', $schoolId)->where('setting_key', 'nama_waka_kesiswaan')->value('setting_value');
+        $nipKepsek = \App\Models\Setting::where('school_id', $schoolId)->where('setting_key', 'nip_kepala_sekolah')->value('setting_value');
+        $nipWaka = \App\Models\Setting::where('school_id', $schoolId)->where('setting_key', 'nip_waka_kesiswaan')->value('setting_value');
         $kopSurat = \App\Models\Setting::where('school_id', $schoolId)->where('setting_key', 'kop_surat')->value('setting_value');
 
         // Defaults
@@ -332,11 +330,13 @@ class RekapController extends Controller
         $signatureLocation = $signatureLocation ?? 'Jakarta';
         $namaKepsek = $namaKepsek ?? '';
         $namaWaka = $namaWaka ?? '';
+        $nipKepsek = $nipKepsek ?? '';
+        $nipWaka = $nipWaka ?? '';
 
         $kelas = Kelas::find($kelasId);
         $rekap = $summary; // Pass array to view
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('rekap.pdf', compact('rekap', 'startDate', 'endDate', 'kelas', 'schoolName', 'schoolAddress', 'signatureLocation', 'namaKepsek', 'namaWaka', 'kopSurat'));
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('rekap.pdf', compact('rekap', 'startDate', 'endDate', 'kelas', 'schoolName', 'schoolAddress', 'signatureLocation', 'namaKepsek', 'namaWaka', 'nipKepsek', 'nipWaka', 'kopSurat'));
         $pdf->setPaper('a4', 'portrait');
 
         return $pdf->stream('rekap_absensi.pdf');
