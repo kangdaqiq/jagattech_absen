@@ -16,7 +16,7 @@ class WhatsAppService
         // Send to student if phone exists
         if ($phone) {
             $msg = "✨ *PENDAFTARAN BERHASIL* ✨\n\n" .
-                "Assalamualaikum, *{$name}* 👋,\n\n" .
+                "Halo, *{$name}* 👋,\n\n" .
                 "Kartu/Perangkat *{$type}* Anda telah berhasil didaftarkan ke sistem absensi sekolah.\n\n" .
                 "🆔 ID Kartu: `{$uid}`\n" .
                 "📅 Tanggal: " . now()->translatedFormat('l, d F Y') . "\n\n" .
@@ -27,7 +27,7 @@ class WhatsAppService
         // Send to parent if phone number exists
         if ($phoneOrtu) {
             $msgOrtu = "✨ *PENDAFTARAN BERHASIL* ✨\n\n" .
-                "Assalamualaikum, Anak Anda, *{$name}* 👋,\n\n" .
+                "Halo, Anak Anda, *{$name}* 👋,\n\n" .
                 "Kartu/Perangkat *{$type}* telah berhasil didaftarkan ke sistem absensi sekolah.\n\n" .
                 "🆔 ID Kartu: `{$uid}`\n" .
                 "📅 Tanggal: " . now()->translatedFormat('l, d F Y') . "\n\n" .

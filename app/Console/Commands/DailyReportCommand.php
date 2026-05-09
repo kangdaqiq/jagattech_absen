@@ -385,7 +385,7 @@ class DailyReportCommand extends Command
 
         if ($studentPhone) {
             $msgStudent = "❌ *Pemberitahuan Ketidakhadiran*\n\n" .
-                "Assalamualaikum, *{$studentName}*,\n\n" .
+                "Halo, *{$studentName}*,\n\n" .
                 "📅 Tanggal: " . now()->format('d/m/Y') . "\n" .
                 "📊 Status: Alpha (Tidak Hadir)\n\n" .
                 "Anda tercatat tidak hadir hari ini tanpa keterangan.\n" .
@@ -403,7 +403,7 @@ class DailyReportCommand extends Command
 
         if ($parentPhone) {
             $msgParent = "❌ *Pemberitahuan Ketidakhadiran Anak*\n\n" .
-                "Assalamualaikum, Orang Tua/Wali dari *{$studentName}*,\n\n" .
+                "Halo, Orang Tua/Wali dari *{$studentName}*,\n\n" .
                 "📅 Tanggal: " . now()->format('d/m/Y') . "\n" .
                 "📊 Status: Alpha (Tidak Hadir)\n" .
                 "⚠️ Kelas: {$kelasName}\n\n" .
