@@ -87,13 +87,21 @@
         {{ $signatureLocation }}, {{ now()->isoFormat('DD MMMM Y') }}
     </div>
 
-    <div style="margin-top: 10px; text-align: center; font-size: 12px; font-weight: bold;">
-        Mengetahui,
-    </div>
-
-    <table style="width: 100%; margin-top: 10px; border: none;">
+    <table style="width: 100%; margin-top: 30px; border: none;">
         <tr>
             <td style="width: 50%; text-align: center; border: none; vertical-align: top; padding: 0 20px;">
+                <div style="font-size: 12px;">Diketahui Oleh,</div>
+                <div style="font-size: 12px; font-weight: bold;">Kepala Sekolah</div>
+                <br><br><br><br>
+                <div style="font-size: 12px; border-top: 1px solid #000; display: inline-block; padding-top: 4px; min-width: 180px;">
+                    {{ $namaKepsek ?: '.............................' }}
+                </div>
+                @if($nipKepsek)
+                    <div style="font-size: 11px;">NIP. {{ $nipKepsek }}</div>
+                @endif
+            </td>
+            <td style="width: 50%; text-align: center; border: none; vertical-align: top; padding: 0 20px;">
+                <div style="font-size: 12px;">Dibuat Oleh,</div>
                 <div style="font-size: 12px; font-weight: bold;">Waka Kesiswaan</div>
                 <br><br><br><br>
                 <div style="font-size: 12px; border-top: 1px solid #000; display: inline-block; padding-top: 4px; min-width: 180px;">
@@ -101,16 +109,6 @@
                 </div>
                 @if($nipWaka)
                     <div style="font-size: 11px;">NIP. {{ $nipWaka }}</div>
-                @endif
-            </td>
-            <td style="width: 50%; text-align: center; border: none; vertical-align: top; padding: 0 20px;">
-                <div style="font-size: 12px; font-weight: bold;">Kepala {{ $schoolName }}</div>
-                <br><br><br><br>
-                <div style="font-size: 12px; border-top: 1px solid #000; display: inline-block; padding-top: 4px; min-width: 180px;">
-                    {{ $namaKepsek ?: '.............................' }}
-                </div>
-                @if($nipKepsek)
-                    <div style="font-size: 11px;">NIP. {{ $nipKepsek }}</div>
                 @endif
             </td>
         </tr>

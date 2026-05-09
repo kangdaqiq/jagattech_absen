@@ -493,7 +493,7 @@
             <div class="header-sep"></div>
             <div>
                 <p id="live-date" class="header-sub">--</p>
-                <p style="font-size:11px;font-weight:700;color:#3b82f6;letter-spacing:1px;">JAGAT TECH ABSENSI SYSTEM
+                <p style="font-size:11px;font-weight:700;color:#3b82f6;letter-spacing:1px;">SISTEM ABSENSI {{ auth()->user()->school->name }}
                 </p>
             </div>
         </div>
@@ -571,7 +571,7 @@
 
     {{-- ── FOOTER ──────────────────────────────── --}}
     <div class="footer">
-        <div class="footer-left">&copy; {{ date('Y') }} Jagat Tech</div>
+        <div class="footer-left">&copy; {{ date('Y') }} {{ auth()->user()->school->name }}</div>
         <div class="footer-right">
             <span></span>
             <p id="last-sync">CONNECTED</p>
