@@ -290,7 +290,7 @@ class WhatsAppMessageTemplates
      */
     public static function finalAbsenceReport(
         int $totalAbsent,
-        array $absentStudentsGrouped
+        iterable $absentStudentsGrouped
     ): string {
         $msg = "📋 *LAPORAN FINAL KETIDAKHADIRAN*\n";
         $msg .= "📅 Tanggal: " . now()->format('d/m/Y') . "\n";
@@ -309,7 +309,7 @@ class WhatsAppMessageTemplates
             }
 
             $students = $absentStudentsGrouped[$status];
-            $count = $students->count();
+            $count = is_countable($students) ? count($students) : iterator_count($students);
 
             $msg .= "*{$statusLabels[$status]}* ({$count} siswa)\n";
             foreach ($students as $att) {

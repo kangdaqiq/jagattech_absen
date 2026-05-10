@@ -182,7 +182,7 @@ class AutoBolosCommand extends Command
         // Use template
         $message = WhatsAppMessageTemplates::finalAbsenceReport(
             totalAbsent: $absentStudents->count(),
-            absentStudentsGrouped: $grouped->toArray()
+            absentStudentsGrouped: $grouped
         );
 
         // Queue message to all classes
