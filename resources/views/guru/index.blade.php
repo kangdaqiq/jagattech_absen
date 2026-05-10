@@ -149,7 +149,7 @@
                                 
                                 <!-- Edit -->
                                 <button class="btnEdit text-warning-500 hover:text-warning-700 hover:bg-warning-50 p-2 rounded-lg transition" 
-                                    data-id="{{ $g->id }}" data-nama="{{ $g->nama }}" data-nip="{{ $g->nip }}" data-wa="{{ $g->no_wa }}" data-rfid="{{ $g->uid_rfid }}"
+                                    data-id="{{ $g->id }}" data-nama="{{ $g->nama }}" data-nip="{{ $g->nip }}" data-wa="{{ $g->no_wa }}" data-rfid="{{ $g->uid_rfid }}" data-is-global="{{ $g->is_global_report ? 1 : 0 }}"
                                     @click="$dispatch('open-modal', 'modalEditGuru')" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </button>
@@ -205,6 +205,12 @@
                     <input type="text" name="no_wa" placeholder="08xxx atau 628xxx" pattern="^(08|628)[0-9]{8,13}$" required class="w-full rounded-lg border border-gray-200 bg-transparent px-4 py-2 outline-none focus:border-brand-500 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
                     <p class="mt-1 text-xs text-gray-500">Format: 08xxx atau 628xxx (8-13 digit)</p>
                 </div>
+                <div>
+                    <label class="mb-1.5 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <input type="checkbox" name="is_global_report" value="1" class="rounded border-gray-300 text-brand-500 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-900">
+                        Terima Laporan Global (Rekap Harian Semua Siswa)
+                    </label>
+                </div>
             </div>
             <div class="mt-6 flex justify-end gap-3">
                 <button type="button" @click="open = false" class="rounded-lg border border-gray-200 px-4 py-2 text-gray-700 hover:bg-gray-50 dark:border-gray-800 dark:text-gray-300 dark:hover:bg-gray-800">Batal</button>
@@ -236,6 +242,12 @@
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">No WhatsApp</label>
                     <input type="text" name="no_wa" id="edit_wa" placeholder="08xxx atau 628xxx" pattern="^(08|628)[0-9]{8,13}$" required class="w-full rounded-lg border border-gray-200 bg-transparent px-4 py-2 outline-none focus:border-brand-500 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                </div>
+                <div>
+                    <label class="mb-1.5 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <input type="checkbox" name="is_global_report" id="edit_global_report" value="1" class="rounded border-gray-300 text-brand-500 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-900">
+                        Terima Laporan Global (Rekap Harian Semua Siswa)
+                    </label>
                 </div>
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">UID RFID (readonly)</label>
@@ -405,11 +417,13 @@
                 var nip = $(this).data('nip');
                 var wa = $(this).data('wa');
                 var rfid = $(this).data('rfid');
+                var isGlobal = $(this).data('is-global');
 
                 $('#edit_nama').val(nama);
                 $('#edit_nip').val(nip);
                 $('#edit_wa').val(wa);
                 $('#edit_rfid').val(rfid);
+                $('#edit_global_report').prop('checked', isGlobal == 1);
 
                 $('#formEditGuru').attr('action', '{{ url('guru') }}/' + id);
             });

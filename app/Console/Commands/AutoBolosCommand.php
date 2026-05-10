@@ -234,21 +234,47 @@ class AutoBolosCommand extends Command
             }
         }
 
-        // Legacy target (Kirim laporan global seluruh kelas)
-        if ($legacyTarget) {
+        // Persiapkan laporan global jika diperlukan (untuk legacy target atau Guru Global)
+        $guruGlobal = \App\Models\Guru::where('school_id', $schoolId)
+            ->where('is_global_report', true)
+            ->whereNotNull('no_wa')
+            ->where('no_wa', '!=', '')
+            ->get();
+
+        if ($legacyTarget || $guruGlobal->isNotEmpty()) {
             $groupedGlobal = $absentStudents->groupBy('status');
             $messageGlobal = WhatsAppMessageTemplates::finalAbsenceReport(
                 totalAbsent: $absentStudents->count(),
                 absentStudentsGrouped: $groupedGlobal
             );
 
-            MessageQueue::create([
-                'school_id'    => $schoolId,
-                'phone_number' => $legacyTarget,
-                'message'      => $messageGlobal,
-                'status'       => 'pending',
-                'created_at'   => now()
-            ]);
+            // Legacy target
+            if ($legacyTarget) {
+                MessageQueue::create([
+                    'school_id'    => $schoolId,
+                    'phone_number' => $legacyTarget,
+                    'message'      => $messageGlobal,
+                    'status'       => 'pending',
+                    'created_at'   => now()
+                ]);
+            }
+
+            // Guru dengan akses report global
+            foreach ($guruGlobal as $guru) {
+                $noWa = $guru->no_wa;
+                if (!str_contains($noWa, '@')) {
+                    $noWa = preg_replace('/^0/', '62', $noWa);
+                    $noWa = $noWa . '@s.whatsapp.net';
+                }
+
+                MessageQueue::create([
+                    'school_id'    => $schoolId,
+                    'phone_number' => $noWa,
+                    'message'      => $messageGlobal,
+                    'status'       => 'pending',
+                    'created_at'   => now()
+                ]);
+            }
         }
 
         $this->info("✓ Absence report queued for school ID $schoolId.");
