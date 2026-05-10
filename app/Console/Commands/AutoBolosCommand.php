@@ -172,6 +172,18 @@ class AutoBolosCommand extends Command
             ->orderBy('status')
             ->get();
 
+        // Get all present students (H, T) for this school to count
+        $presentStudents = Attendance::where('tanggal', $today)
+            ->whereIn('status', ['H', 'T'])
+            ->whereHas('student', function ($q) use ($schoolId) {
+                $q->where('school_id', $schoolId);
+            })
+            ->whereHas('student.kelas', function ($q) {
+                $q->where('is_active_attendance', true);
+            })
+            ->get();
+
+        // Jika tidak ada siswa absen SAMA SEKALI di sekolah, bisa langsung return
         if ($absentStudents->isEmpty()) {
             return;
         }
@@ -193,11 +205,17 @@ class AutoBolosCommand extends Command
                 continue; // Tidak ada yang absen di kelas ini, skip
             }
 
+            // Hitung siswa hadir di kelas ini
+            $totalPresentKelas = $presentStudents->filter(function ($att) use ($kelas) {
+                return $att->student->kelas_id == $kelas->id;
+            })->count();
+
             $wali = $kelas->waliKelas;
             $namaWali = $wali ? $wali->nama : '-';
 
             $groupedKelas = $absenKelas->groupBy('status');
             $msgKelas = WhatsAppMessageTemplates::finalAbsenceReport(
+                totalPresent: $totalPresentKelas,
                 totalAbsent: $absenKelas->count(),
                 absentStudentsGrouped: $groupedKelas
             );
@@ -243,7 +261,10 @@ class AutoBolosCommand extends Command
 
         if ($legacyTarget || $guruGlobal->isNotEmpty()) {
             $groupedGlobal = $absentStudents->groupBy('status');
+            $totalPresentGlobal = $presentStudents->count();
+
             $messageGlobal = WhatsAppMessageTemplates::finalAbsenceReport(
+                totalPresent: $totalPresentGlobal,
                 totalAbsent: $absentStudents->count(),
                 absentStudentsGrouped: $groupedGlobal
             );

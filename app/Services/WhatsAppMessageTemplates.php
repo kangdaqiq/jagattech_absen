@@ -289,11 +289,15 @@ class WhatsAppMessageTemplates
      * Final absence report (after daily processing)
      */
     public static function finalAbsenceReport(
+        int $totalPresent,
         int $totalAbsent,
         iterable $absentStudentsGrouped
     ): string {
-        $msg = "📋 *LAPORAN FINAL KETIDAKHADIRAN*\n";
+        $msg = "📋 *LAPORAN FINAL ABSENSI*\n";
         $msg .= "📅 Tanggal: " . now()->format('d/m/Y') . "\n";
+        $msg .= str_repeat("─", 30) . "\n";
+        $msg .= "✅ Siswa Hadir: *{$totalPresent}*\n";
+        $msg .= "❌ Siswa Tidak Hadir: *{$totalAbsent}*\n";
         $msg .= str_repeat("─", 30) . "\n\n";
 
         $statusLabels = [
@@ -320,7 +324,6 @@ class WhatsAppMessageTemplates
         }
 
         $msg .= str_repeat("─", 30) . "\n";
-        $msg .= "Total: *{$totalAbsent} Siswa* tidak hadir\n";
         $msg .= "\n_Laporan otomatis setelah proses harian_";
 
         return $msg;
