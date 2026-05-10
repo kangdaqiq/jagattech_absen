@@ -62,9 +62,9 @@
 
             <div class="mb-5.5">
                 <label class="mb-2.5 block text-black dark:text-white">
-                    UID RFID (Opsional)
+                    UID RFID
                 </label>
-                <input type="text" name="uid_rfid" value="{{ old('uid_rfid', $gateCard->uid_rfid) }}" class="w-full rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-brand-500 active:border-brand-500 dark:border-form-strokedark dark:bg-form-input dark:focus:border-brand-500 @error('uid_rfid') border-danger @enderror" />
+                <input type="text" name="uid_rfid" value="{{ old('uid_rfid', $gateCard->uid_rfid) }}" readonly class="w-full rounded border border-gray-200 bg-gray-100 py-3 px-5 outline-none dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400 @error('uid_rfid') border-danger @enderror" />
                 @error('uid_rfid')
                     <p class="mt-1 text-xs text-danger">{{ $message }}</p>
                 @enderror
