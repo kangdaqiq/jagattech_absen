@@ -250,7 +250,7 @@
                     </label>
                 </div>
                 <div>
-                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">UID RFID (readonly)</label>
+                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">UID RFID</label>
                     <input type="text" name="uid_rfid" id="edit_rfid" readonly class="w-full rounded-lg border border-gray-200 bg-gray-100 px-4 py-2 outline-none dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400">
                 </div>
             </div>
@@ -499,6 +499,9 @@
                             $('#enroll_status').html('<span class="text-success-500 font-bold"><i class="fas fa-check-circle mr-1"></i> Berhasil! Menyegarkan...</span>');
 
                             setTimeout(function () { location.reload(); }, 1500);
+                        } else if (res.error) {
+                            clearInterval(enrollInterval);
+                            $('#enroll_status').html('<span class="text-error-500"><i class="fas fa-times-circle mr-1"></i>Gagal: ' + res.error + '</span>');
                         }
                     });
                 }, 1500);

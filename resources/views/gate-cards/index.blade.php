@@ -364,6 +364,9 @@
                             $('#uid_wrapper').removeClass('hidden');
                             $('#enroll_status').html('<span class="text-success-500"><i class="fas fa-check-circle mr-1"></i>Kartu berhasil didaftarkan! Halaman akan dimuat ulang...</span>');
                             setTimeout(() => location.reload(), 1500);
+                        } else if (res.error) {
+                            clearInterval(enrollInterval);
+                            $('#enroll_status').html('<span class="text-error-500"><i class="fas fa-times-circle mr-1"></i>Gagal: ' + res.error + '</span>');
                         }
                     });
                 }, 1500);

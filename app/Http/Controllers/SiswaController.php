@@ -407,6 +407,10 @@ class SiswaController extends Controller
         $siswa = Siswa::findOrFail($id);
         if ($siswa->enroll_status === 'done' && $siswa->uid_rfid) {
             return response()->json(['ok' => true, 'uid' => $siswa->uid_rfid]);
+        } elseif (str_starts_with($siswa->enroll_status, 'error:')) {
+            $errorMsg = substr($siswa->enroll_status, 6);
+            $siswa->update(['enroll_status' => 'none']);
+            return response()->json(['ok' => true, 'uid' => null, 'error' => $errorMsg]);
         }
         return response()->json(['ok' => true, 'uid' => null]);
     }

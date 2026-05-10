@@ -216,6 +216,10 @@ class GuruController extends Controller
         $guru = Guru::findOrFail($id);
         if ($guru->enroll_status === 'done' && $guru->uid_rfid) {
             return response()->json(['ok' => true, 'uid' => $guru->uid_rfid]);
+        } elseif (str_starts_with($guru->enroll_status, 'error:')) {
+            $errorMsg = substr($guru->enroll_status, 6);
+            $guru->update(['enroll_status' => 'none']);
+            return response()->json(['ok' => true, 'uid' => null, 'error' => $errorMsg]);
         }
         return response()->json(['ok' => true, 'uid' => null]);
     }

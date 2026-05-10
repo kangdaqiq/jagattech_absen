@@ -402,9 +402,21 @@ class RfidController extends Controller
             // But usually cards are unique tokens. Let's check THIS school first.
             if (
                 Siswa::where('uid_rfid', $uid)->where('school_id', $device->school_id)->exists() ||
-                Guru::where('uid_rfid', $uid)->where('school_id', $device->school_id)->exists()
+                Guru::where('uid_rfid', $uid)->where('school_id', $device->school_id)->exists() ||
+                GateCard::where('uid_rfid', $uid)->where('school_id', $device->school_id)->exists()
             ) {
                 DB::rollBack();
+
+                Siswa::where('enroll_status', 'requested')
+                    ->where('school_id', $device->school_id)
+                    ->update(['enroll_status' => 'error:Kartu sudah terdaftar']);
+                Guru::where('enroll_status', 'requested')
+                    ->where('school_id', $device->school_id)
+                    ->update(['enroll_status' => 'error:Kartu sudah terdaftar']);
+                GateCard::where('enroll_status', 'requested')
+                    ->where('school_id', $device->school_id)
+                    ->update(['enroll_status' => 'error:Kartu sudah terdaftar']);
+
                 return $this->response(false, 'gagal', 'Kartu sudah terdaftar di sekolah ini', 'warning');
             }
 

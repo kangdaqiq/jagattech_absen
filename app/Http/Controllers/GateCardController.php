@@ -148,6 +148,10 @@ class GateCardController extends Controller
         $gateCard = GateCard::where('school_id', auth()->user()->school_id)->findOrFail($id);
         if ($gateCard->enroll_status == 'done') {
             return response()->json(['ok' => true, 'uid' => $gateCard->uid_rfid]);
+        } elseif (str_starts_with($gateCard->enroll_status, 'error:')) {
+            $errorMsg = substr($gateCard->enroll_status, 6);
+            $gateCard->update(['enroll_status' => 'none']);
+            return response()->json(['ok' => false, 'error' => $errorMsg]);
         }
         return response()->json(['ok' => false]);
     }
