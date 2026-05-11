@@ -168,6 +168,35 @@ class WhatsAppMessageTemplates
     }
 
     /**
+     * Bolos (skipped checkout) notification to student
+     */
+    public static function bolosStudent(string $nama): string
+    {
+        return "🏃 *Pemberitahuan Indikasi Bolos*\n\n" .
+            "Halo, *{$nama}*,\n\n" .
+            "📅 Tanggal: " . now()->format('d/m/Y') . "\n" .
+            "📊 Status: Bolos (Tidak Absen Pulang)\n\n" .
+            "Anda tercatat sudah absen masuk, namun tidak melakukan absen pulang hingga batas waktu yang ditentukan.\n" .
+            "Mohon segera konfirmasi ke wali kelas atau bagian kesiswaan jika Anda lupa melakukan absen pulang.\n\n" .
+            "_Notifikasi otomatis dari sistem absensi sekolah._";
+    }
+
+    /**
+     * Bolos (skipped checkout) notification to parent
+     */
+    public static function bolosParent(string $nama, string $kelas): string
+    {
+        return "🏃 *Pemberitahuan Indikasi Bolos Anak*\n\n" .
+            "Halo, Orang Tua/Wali dari *{$nama}*,\n\n" .
+            "📅 Tanggal: " . now()->format('d/m/Y') . "\n" .
+            "📊 Status: Bolos (Tidak Absen Pulang)\n" .
+            "⚠️ Kelas: {$kelas}\n\n" .
+            "Anak Anda tercatat sudah absen masuk hari ini, namun tidak melakukan absen pulang hingga batas waktu yang ditentukan.\n" .
+            "Mohon konfirmasi kepada anak Anda atau wali kelas terkait hal ini.\n\n" .
+            "_Notifikasi otomatis dari sistem absensi sekolah._";
+    }
+
+    /**
      * Daily report for class group
      */
     public static function dailyReportClass(

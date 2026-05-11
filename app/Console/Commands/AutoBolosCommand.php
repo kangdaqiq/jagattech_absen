@@ -80,9 +80,8 @@ class AutoBolosCommand extends Command
 
         $countB = 0;
         if ($checkoutEnabled === 'true') {
-            // Only mark as Bolos if checkout is enabled
-            // Only for students in Active Attendance Classes AND belonging to this school
-            $countB = DB::table('attendance')
+            // Fetch students who are about to be marked as Bolos
+            $bolosStudentsQuery = DB::table('attendance')
                 ->join('siswa', 'attendance.student_id', '=', 'siswa.id')
                 ->join('kelas', 'siswa.kelas_id', '=', 'kelas.id')
                 ->where('siswa.school_id', $schoolId)
@@ -90,14 +89,40 @@ class AutoBolosCommand extends Command
                 ->whereNotNull('attendance.jam_masuk')
                 ->whereNull('attendance.jam_pulang')
                 ->whereNotIn('attendance.status', ['I', 'S'])
-                ->where('kelas.is_active_attendance', true)
-                ->update([
-                    'attendance.status' => 'B',
-                    'attendance.keterangan' => DB::raw("CONCAT(IFNULL(attendance.keterangan, ''), ' [Auto: Tidak Absen Pulang]')"),
-                    'attendance.updated_at' => now()
-                ]);
+                ->where('kelas.is_active_attendance', true);
 
-            $this->info("Marked $countB records as Bolos (B) for school ID $schoolId.");
+            $bolosStudents = $bolosStudentsQuery->select('siswa.nama', 'siswa.no_wa', 'siswa.wa_ortu', 'kelas.nama_kelas')->get();
+
+            // Perform bulk update to mark as Bolos
+            $countB = $bolosStudentsQuery->update([
+                'attendance.status' => 'B',
+                'attendance.keterangan' => DB::raw("CONCAT(IFNULL(attendance.keterangan, ''), ' [Auto: Tidak Absen Pulang]')"),
+                'attendance.updated_at' => now()
+            ]);
+
+            // Queue personal notifications for Bolos students
+            foreach ($bolosStudents as $bs) {
+                if (!empty($bs->no_wa)) {
+                    MessageQueue::create([
+                        'school_id' => $schoolId,
+                        'phone_number' => $bs->no_wa,
+                        'message' => \App\Services\WhatsAppMessageTemplates::bolosStudent($bs->nama),
+                        'status' => 'pending',
+                        'created_at' => now()
+                    ]);
+                }
+                if (!empty($bs->wa_ortu)) {
+                    MessageQueue::create([
+                        'school_id' => $schoolId,
+                        'phone_number' => $bs->wa_ortu,
+                        'message' => \App\Services\WhatsAppMessageTemplates::bolosParent($bs->nama, $bs->nama_kelas),
+                        'status' => 'pending',
+                        'created_at' => now()
+                    ]);
+                }
+            }
+
+            $this->info("Marked $countB records as Bolos (B) and queued personal notifications for school ID $schoolId.");
         } else {
             $this->info("Checkout attendance is disabled for school ID $schoolId.");
         }
@@ -111,6 +136,7 @@ class AutoBolosCommand extends Command
             ->whereHas('kelas', function ($q) {
                 $q->where('is_active_attendance', true);
             })
+            ->with('kelas')
             ->get();
 
         $countA = 0;
@@ -128,9 +154,29 @@ class AutoBolosCommand extends Command
                 'updated_at' => now()
             ]);
             $countA++;
+
+            // Queue personal notifications for Alpha students
+            if (!empty($s->no_wa)) {
+                MessageQueue::create([
+                    'school_id' => $schoolId,
+                    'phone_number' => $s->no_wa,
+                    'message' => \App\Services\WhatsAppMessageTemplates::alphaStudent($s->nama),
+                    'status' => 'pending',
+                    'created_at' => now()
+                ]);
+            }
+            if (!empty($s->wa_ortu)) {
+                MessageQueue::create([
+                    'school_id' => $schoolId,
+                    'phone_number' => $s->wa_ortu,
+                    'message' => \App\Services\WhatsAppMessageTemplates::alphaParent($s->nama, $s->kelas->nama_kelas ?? '-'),
+                    'status' => 'pending',
+                    'created_at' => now()
+                ]);
+            }
         }
 
-        $this->info("Marked $countA students as Alpha (A) for school ID $schoolId.");
+        $this->info("Marked $countA students as Alpha (A) and queued personal notifications for school ID $schoolId.");
 
         // Update Setting for this school
         Setting::updateOrCreate(
