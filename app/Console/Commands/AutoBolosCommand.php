@@ -171,17 +171,25 @@ class AutoBolosCommand extends Command
 
     private function sendAbsenceReport($today, $schoolId)
     {
-        // Get classes with WhatsApp Group ID for this school
-        $kelasWithGroupId = \App\Models\Kelas::where('school_id', $schoolId)
-            ->whereNotNull('wa_group_id')
-            ->where('wa_group_id', '!=', '')
-            ->where('is_active_attendance', true)
-            ->where('is_active_report', true)
-            ->get();
-
         $legacyTarget = Setting::where('school_id', $schoolId)->where('setting_key', 'report_target_jid')->value('setting_value');
 
-        if ($kelasWithGroupId->isEmpty() && !$legacyTarget) {
+        // Cek apakah ada penerima laporan: grup kelas, legacyTarget, wali kelas, atau guru global
+        $hasWaGroup = \App\Models\Kelas::where('school_id', $schoolId)
+            ->whereNotNull('wa_group_id')->where('wa_group_id', '!=', '')
+            ->where('is_active_attendance', true)->where('is_active_report', true)
+            ->exists();
+
+        $hasWaliKelas = \App\Models\Kelas::where('school_id', $schoolId)
+            ->whereNotNull('wali_kelas_id')
+            ->where('is_active_attendance', true)->where('is_active_report', true)
+            ->exists();
+
+        $hasGuruGlobal = \App\Models\Guru::where('school_id', $schoolId)
+            ->where('is_global_report', true)->whereNotNull('no_wa')->where('no_wa', '!=', '')->exists();
+
+        // Jika tidak ada penerima sama sekali, skip
+        if (!$hasWaGroup && !$legacyTarget && !$hasWaliKelas && !$hasGuruGlobal) {
+            $this->info("No report recipients configured for school ID $schoolId. Skipped.");
             return;
         }
 
