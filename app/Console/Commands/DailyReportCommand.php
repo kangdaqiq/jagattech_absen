@@ -37,7 +37,7 @@ class DailyReportCommand extends Command
     {
         $schoolId = $school->id;
         $this->info("------------------------------------------------");
-        $this->info("Processing Daily Report for School: {$school->nama_sekolah} (ID: $schoolId)");
+        $this->info("Processing Daily Report for School: {$school->name} (ID: $schoolId)");
 
         // 1. Check for Holiday (Dynamic: if no student attendance exists today, assume holiday)
         $hasAttendance = \App\Models\Attendance::where('tanggal', $today)

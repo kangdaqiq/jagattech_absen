@@ -10,6 +10,21 @@ class MessageQueue extends Model
     public $timestamps = true;
     protected $fillable = ['school_id', 'phone_number', 'message', 'status', 'attempts', 'last_error', 'created_at', 'updated_at'];
     
+    protected static function booted()
+    {
+        static::creating(function ($messageQueue) {
+            if ($messageQueue->school_id && !empty($messageQueue->message)) {
+                $school = \App\Models\School::find($messageQueue->school_id);
+                if ($school && !empty($school->name)) {
+                    $signature = "*" . trim($school->name) . "*";
+                    if (!str_contains($messageQueue->message, $signature)) {
+                        $messageQueue->message = rtrim($messageQueue->message) . "\n\n" . $signature;
+                    }
+                }
+            }
+        });
+    }
+    
     /**
      * Mutator to automatically format phone number into WhatsApp JID.
      */

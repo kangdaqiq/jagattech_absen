@@ -30,7 +30,7 @@ class AutoBolosCommand extends Command
         $today = now()->format('Y-m-d');
         $schoolId = $school->id;
 
-        $this->info("Processing School: {$school->nama_sekolah} (ID: $schoolId) for $today");
+        $this->info("Processing School: {$school->name} (ID: $schoolId) for $today");
 
         // 0. Check Schedule Time (Per School)
         $scheduleTime = Setting::where('school_id', $schoolId)
